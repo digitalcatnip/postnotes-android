@@ -1,5 +1,7 @@
 package io.catnip.postnotes.models;
 
+import io.realm.RealmObject;
+
 /**
  * Represents a user in Realm / Firebase
  *
@@ -20,10 +22,19 @@ package io.catnip.postnotes.models;
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-public class User extends BaseObject {
+public class User extends RealmObject {
     private String authID;
     private String email;
     private String pictureURL;
+    private int id; //unique key
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Get the Firebase ID for this user

@@ -1,5 +1,8 @@
 package io.catnip.postnotes.models;
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+
 /**
  * Represents a user's note in Realm
  *
@@ -20,8 +23,17 @@ package io.catnip.postnotes.models;
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-public class Note extends BaseObject {
+public class Note extends RealmObject {
     private String note;
+    private int id; //unique key
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Finds the next unique identifier in Realm. We don't need this after adding networking.

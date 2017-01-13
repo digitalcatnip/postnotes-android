@@ -11,6 +11,8 @@ import io.realm.RealmObject;
 import io.realm.RealmQuery;
 
 /**
+ * Main class to interact with Realm
+ *
  * Created by james on 1/11/17.
  */
 

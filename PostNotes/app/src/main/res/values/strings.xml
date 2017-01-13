@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Post Notes</string>
+    <string name="web_client_id">1076570217754-k5b204a0fbgg3ukokaavtr0b300lm5f3.apps.googleusercontent.com</string>
+    <string name="funny_font">LuckiestGuy.ttf</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
