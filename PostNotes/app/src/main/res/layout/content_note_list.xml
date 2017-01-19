@@ -18,5 +18,6 @@
         android:layout_height="match_parent"
         android:id="@+id/note_list"
         style="@style/Widget.AppCompat.ListView"
-        android:divider="@android:drawable/divider_horizontal_dark" />
+        android:divider="@color/colorGrey"
+        android:dividerHeight="1dp" />
 </RelativeLayout>

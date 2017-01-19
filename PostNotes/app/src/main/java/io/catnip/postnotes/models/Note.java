@@ -1,6 +1,5 @@
 package io.catnip.postnotes.models;
 
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 /**
@@ -46,6 +45,22 @@ public class Note extends RealmObject {
 
     @Override
     public String toString() {
+        return "Note " + id;
+    }
+
+    /**
+     * Get the contents for this note
+     * @return the contents of the note
+     */
+    public String getNote() {
         return note;
+    }
+
+    /**
+     * Set the note's contents
+     * @param note The new contents
+     */
+    public void setNote(String note) {
+        this.note = note;
     }
 }

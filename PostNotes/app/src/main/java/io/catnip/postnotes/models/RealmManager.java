@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
 
@@ -151,9 +153,14 @@ public class RealmManager {
                 auth.getCurrentUser().getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     @Override
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        GetTokenResult result = task.getResult();
-                        mainUser.setAuthToken(result.getToken());
-                        Log.d(TAG, "Set user auth token to " + mainUser.getAuthToken());
+                        try {
+                            GetTokenResult result = task.getResult();
+                            mainUser.setAuthToken(result.getToken());
+                            Log.d(TAG, "Set user auth token to " + mainUser.getAuthToken());
+                        } catch (Exception e) {
+                            Log.e(RealmManager.TAG, "Unable to fetch token from Firebase (no network?): " +
+                                    e.getLocalizedMessage());
+                        }
                     }
                 });
             } catch(NullPointerException e) {
