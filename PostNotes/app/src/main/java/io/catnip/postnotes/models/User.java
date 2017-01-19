@@ -1,6 +1,12 @@
 package io.catnip.postnotes.models;
 
+import com.google.firebase.auth.FirebaseUser;
+
+import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Represents a user in Realm / Firebase
@@ -26,7 +32,21 @@ public class User extends RealmObject {
     private String authID;
     private String email;
     private String pictureURL;
+    private String name;
+    private String authToken;
     private int id; //unique key
+
+    public User() {
+        authID = email = pictureURL = name = "";
+    }
+
+    public User(FirebaseUser user) {
+        this();
+        setAuthID(user.getUid());
+        setEmail(user.getEmail());
+        setPictureURL(user.getPhotoUrl().toString());
+        setName(user.getDisplayName());
+    }
 
     public int getId() {
         return id;
@@ -82,5 +102,51 @@ public class User extends RealmObject {
      */
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
+    }
+
+    /**
+     * Get the next unique ID in Realm for users
+     * @return
+     */
+    public static int getNextID() {
+        RealmQuery<User> q = RealmManager.getInstance(null).query(User.class);
+        RealmResults<User> users = q.findAllSorted("id", Sort.DESCENDING);
+        if (users.size() > 0)
+            return users.first().getId() + 1;
+        return 100;
+    }
+
+    /**
+     * Get the user's full name
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Set the user's full name
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Get the user's auth token - usually a JWT
+     * @return
+     */
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    /**
+     * Set the user's auth token from Firebase - it's usually a JWT
+     * @param authToken
+     */
+    public void setAuthToken(String authToken) {
+        RealmManager.getInstance(null).getRealm().beginTransaction();
+        this.authToken = authToken;
+        RealmManager.getInstance(null).getRealm().commitTransaction();
     }
 }

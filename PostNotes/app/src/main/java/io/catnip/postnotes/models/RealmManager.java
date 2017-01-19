@@ -1,6 +1,13 @@
 package io.catnip.postnotes.models;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +16,8 @@ import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Main class to interact with Realm
@@ -18,11 +27,14 @@ import io.realm.RealmQuery;
 
 public class RealmManager {
     private static RealmManager sharedInstance = null;
+    private static final String TAG = "PostNotesRealm";
 
     private Realm realm;
+    private User mainUser;
 
     private RealmManager() {
         super();
+        mainUser = null;
     }
 
     private RealmManager(Context context) {
@@ -53,9 +65,9 @@ public class RealmManager {
      * @return The committed copy that you should update - discard the old copy.
      */
     public RealmModel saveModel(RealmObject model) {
-        realm.beginTransaction();
-        model = realm.copyToRealm(model);
-        realm.commitTransaction();
+        getRealm().beginTransaction();
+        model = getRealm().copyToRealm(model);
+        getRealm().commitTransaction();
         return model;
     }
 
@@ -68,9 +80,9 @@ public class RealmManager {
      * be guaranteed from the original copy.
      */
     public ArrayList<RealmModel> saveModels(ArrayList<RealmObject> models) {
-        realm.beginTransaction();
-        List<RealmObject> copied = realm.copyToRealm(models);
-        realm.commitTransaction();
+        getRealm().beginTransaction();
+        List<RealmObject> copied = getRealm().copyToRealm(models);
+        getRealm().commitTransaction();
         return new ArrayList(copied);
     }
 
@@ -80,11 +92,11 @@ public class RealmManager {
      * @param models models to delete.
      */
     public void deleteModels(ArrayList<RealmObject> models) {
-        realm.beginTransaction();
+        getRealm().beginTransaction();
         for (RealmObject model: models) {
             model.deleteFromRealm();
         }
-        realm.commitTransaction();
+        getRealm().commitTransaction();
     }
 
     /**
@@ -95,6 +107,65 @@ public class RealmManager {
      * @return The beginning of a realm query which you can chain on
      */
     public <T extends RealmModel> RealmQuery<T> query(Class<T> cl) {
-        return realm.where(cl);
+        return getRealm().where(cl);
+    }
+
+    /**
+     * Set the main user of the app - for authentication purposes
+     * @param u The user to set as the main user of the app
+     */
+    public void setMainUser(User u) {
+        mainUser = u;
+    }
+
+    /**
+     * Get the main user of the app
+     * @return The main user
+     */
+    public User getMainUser() {
+        return mainUser;
+    }
+
+    /**
+     * Get the Realm database in order to support transactions
+     * @return
+     */
+    public Realm getRealm() {
+        return realm;
+    }
+
+    /**
+     * Indicate whether we have a main user - that is, someone has logged in to the app.
+     * @return
+     */
+    public boolean hasMainUser() {
+        return mainUser != null;
+    }
+
+    private void initializeMainUser() {
+        RealmResults<User> users = query(User.class).findAllSorted("id", Sort.ASCENDING);
+        if (users.size() > 0) {
+            mainUser = users.first();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            try {
+                auth.getCurrentUser().getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        GetTokenResult result = task.getResult();
+                        mainUser.setAuthToken(result.getToken());
+                        Log.d(TAG, "Set user auth token to " + mainUser.getAuthToken());
+                    }
+                });
+            } catch(NullPointerException e) {
+                Log.e(RealmManager.TAG, "Null pointer exception when fetching auth token for main user");
+            }
+        }
+    }
+
+    /**
+     * Initialize our internal state from Realm.  This should only run when launching the app
+     */
+    public void initialize() {
+        this.initializeMainUser();
     }
 }

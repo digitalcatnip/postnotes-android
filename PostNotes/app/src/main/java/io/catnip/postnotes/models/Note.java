@@ -43,4 +43,9 @@ public class Note extends RealmObject {
     public int uniqueID() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return note;
+    }
 }

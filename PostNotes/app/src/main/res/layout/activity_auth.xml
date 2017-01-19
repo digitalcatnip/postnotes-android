@@ -9,16 +9,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.catnip.postnotes.AuthActivity">
+    tools:context="io.catnip.postnotes.activities.AuthActivity">
 
     <!-- Login progress -->
 
     <ImageView
         android:layout_width="match_parent"
-        app:srcCompat="@mipmap/note_icon"
+        app:srcCompat="@drawable/ic_notepad_icon"
         android:id="@+id/imageView"
-        android:layout_height="300dp"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:layout_height="200dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -27,7 +27,9 @@
         android:text="Post Notes"
         android:textSize="24sp"
         android:textAlignment="center"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="sans-serif"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
