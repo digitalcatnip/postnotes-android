@@ -54,8 +54,12 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
         });
 
         //Start the list of notes to display.
-        //This really should be read from Realm.
-        //Also, we'll eventually call the network from here as well.
+
+        // 1. Load notes from Realm and assign to "notes"
+
+        // 2. Load notes from the network into Realm
+
+        // 3. Remove this line
         notes = new ArrayList<>();
 
         //Configure the list to use whatever notes are put in notes array
