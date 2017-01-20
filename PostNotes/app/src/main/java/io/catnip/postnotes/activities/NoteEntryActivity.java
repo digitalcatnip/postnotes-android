@@ -37,10 +37,12 @@ public class NoteEntryActivity extends AppCompatActivity implements View.OnClick
         setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_note_entry);
 
+        //Use the funny font in the title
         TextView title = (TextView)findViewById(R.id.note_entry_title);
         Typeface font = Typeface.createFromAsset(getAssets(), "LuckiestGuy.ttf");
         title.setTypeface(font);
 
+        //Use the funny font on the button
         Button entry = (Button)findViewById(R.id.note_entry_button);
         entry.setTypeface(font);
         entry.setOnClickListener(this);
@@ -50,6 +52,7 @@ public class NoteEntryActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         Log.i(TAG, "Note entry complete");
 
+        //The user entered their text, so let's send it back to the list
         EditText text = (EditText)findViewById(R.id.note_entry_text);
 
         Intent intent = new Intent();

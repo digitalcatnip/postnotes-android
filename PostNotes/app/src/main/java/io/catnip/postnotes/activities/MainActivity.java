@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //The sole purpose of this activity is to determine if the user has previously authenticated
+        //If they have, show the list of notes.  If they haven't, show the signin screen.
         RealmManager.getInstance(this).initialize();
         if(!RealmManager.getInstance(null).hasMainUser()) {
             Intent intent = new Intent(this, AuthActivity.class);

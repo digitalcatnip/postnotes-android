@@ -25,7 +25,9 @@ public class NoteArrayAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View contentView, ViewGroup parent) {
-        TextView text = null;
+        //This configures the row to show a specific note.
+        //contentView may be recycled - if it is, just reuse it.  If it isn't, create it.
+        TextView text;
         if (contentView != null) {
             text = (TextView) contentView;
         } else {
@@ -34,6 +36,7 @@ public class NoteArrayAdapter extends ArrayAdapter {
             text.setPadding(0, 10, 0, 10);
         }
 
+        //Get the note we need to display and then set the TextView text appropriately
         Note n = (Note) this.getItem(position);
         text.setText(n.getNote());
         return text;

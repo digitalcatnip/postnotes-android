@@ -47,28 +47,18 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //If the plus button is pressed, show the note entry screen
                 Intent intent = new Intent(NoteListActivity.this, NoteEntryActivity.class);
                 startActivityForResult(intent, 0);
             }
         });
 
+        //Start the list of notes to display.
+        //This really should be read from Realm.
+        //Also, we'll eventually call the network from here as well.
         notes = new ArrayList<>();
 
-        Note n = new Note();
-        n.setId(1);
-        n.setNote("New note from james how does this look?");
-        notes.add(n);
-
-        n = new Note();
-        n.setId(1);
-        n.setNote("New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?New note from james how does this look?");
-        notes.add(n);
-
-        n = new Note();
-        n.setId(1);
-        n.setNote("This is the last note - it's all we need.");
-        notes.add(n);
-
+        //Configure the list to use whatever notes are put in notes array
         listAdapter = new NoteArrayAdapter(this, android.R.layout.list_content, notes);
         ListView list = (ListView)findViewById(R.id.note_list);
         list.setAdapter(listAdapter);
@@ -79,10 +69,13 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Note n = notes.get(position);
         Log.i(TAG, "Clicked note: " + n.getNote());
+        //You could modify the code to edit an existing note - exercise for the reader.
     }
 
     @Override
     public void onActivityResult(int unk1, int unk2, Intent data) {
+        //The response on the activity will contain a new note.  Let's create it and display it.
+        //The Realm persistence code will go here.
         String text = data.getStringExtra(NoteEntryActivity.NEW_NOTE);
         Log.i(TAG, "Creating note: " + text);
 

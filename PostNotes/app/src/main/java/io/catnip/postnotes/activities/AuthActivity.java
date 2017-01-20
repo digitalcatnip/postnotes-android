@@ -61,9 +61,11 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_auth);
 
         mAuth = FirebaseAuth.getInstance();
+        //Listener for Firebase authentication - fired after login / logout
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                //Firebase user configuration - contains social networking info
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //User is signed in
@@ -102,22 +104,26 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        //Use the funny font
         TextView txt = (TextView)findViewById(R.id.title);
         Typeface font = Typeface.createFromAsset(getAssets(), "LuckiestGuy.ttf");
         txt.setTypeface(font);
 
+        //Make sure we react to the signin button press
         findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        //Listen for signin events when we are displayed
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        //Don't listen for auth events when we're destroyed
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
@@ -130,12 +136,11 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onClick(View v) {
-        Log.d(TAG, "Click received!");
         switch (v.getId()) {
+            //The button was pressed, so let's signin
             case R.id.sign_in_button:
                 signIn();
                 break;
-            // ...
         }
     }
 
@@ -153,13 +158,13 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
-                // ...
                 Log.d(TAG, "Google signin failed");
             }
         }
     }
 
     private void signIn() {
+        //Launch a web browser to authenticate with Google
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -167,6 +172,7 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
+        //Take the cookie from Google and give it to Firebase
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -187,7 +193,9 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void transitionToNoteList() {
+        //We've signed in, so show the main application
         Intent intent = new Intent(this, NoteListActivity.class);
+        //Clear the back button so we don't accidentally show the login screen
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
