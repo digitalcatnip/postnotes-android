@@ -1,8 +1,22 @@
 package io.catnip.postnotes.activities;
 
+//  Copyright © 2017 Digital Catnip. All rights reserved.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,7 +47,8 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "FAB pressed!");
+                Intent intent = new Intent(NoteListActivity.this, NoteEntryActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -64,5 +79,16 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Note n = notes.get(position);
         Log.i(TAG, "Clicked note: " + n.getNote());
+    }
+
+    @Override
+    public void onActivityResult(int unk1, int unk2, Intent data) {
+        String text = data.getStringExtra(NoteEntryActivity.NEW_NOTE);
+        Log.i(TAG, "Creating note: " + text);
+
+        Note n = new Note();
+        n.setId(notes.size());
+        n.setNote(text);
+        notes.add(n);
     }
 }
