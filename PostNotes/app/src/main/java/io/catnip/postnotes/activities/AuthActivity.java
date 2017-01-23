@@ -16,6 +16,7 @@ package io.catnip.postnotes.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Network;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import io.catnip.postnotes.R;
+import io.catnip.postnotes.models.NetworkManager;
 import io.catnip.postnotes.models.RealmManager;
 import io.catnip.postnotes.models.User;
 
@@ -80,6 +82,8 @@ public class AuthActivity extends AppCompatActivity implements GoogleApiClient.O
                         @Override
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             RealmManager.getInstance(null).getMainUser().setAuthToken(task.getResult().getToken());
+                            NetworkManager.getSharedInstance().setAuthToken(task.getResult().getToken());
+                            NetworkManager.getSharedInstance().initialize(AuthActivity.this);
                             AuthActivity.this.transitionToNoteList();
                         }
                     });

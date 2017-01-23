@@ -27,6 +27,20 @@ import io.realm.Sort;
  * Created by james on 1/11/17.
  */
 
+//  Copyright © 2017 Digital Catnip. All rights reserved.
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 public class RealmManager {
     private static RealmManager sharedInstance = null;
     private static final String TAG = "PostNotesRealm";
@@ -46,7 +60,7 @@ public class RealmManager {
     }
 
     /**
-     * Get the instance this is
+     * Get the current Realm Manager instance
      *
      * @param context - Only needs to be passed in at the start of the app.  Afterwards, can be null.
      * @return The global RealmManager instance
@@ -144,7 +158,7 @@ public class RealmManager {
         return mainUser != null;
     }
 
-    private void initializeMainUser() {
+    private void initializeMainUser(final Context context) {
         RealmResults<User> users = query(User.class).findAllSorted("id", Sort.ASCENDING);
         if (users.size() > 0) {
             mainUser = users.first();
@@ -157,6 +171,8 @@ public class RealmManager {
                             GetTokenResult result = task.getResult();
                             mainUser.setAuthToken(result.getToken());
                             Log.d(TAG, "Set user auth token to " + mainUser.getAuthToken());
+                            NetworkManager.getSharedInstance().setAuthToken(mainUser.getAuthToken());
+                            NetworkManager.getSharedInstance().initialize(context);
                         } catch (Exception e) {
                             Log.e(RealmManager.TAG, "Unable to fetch token from Firebase (no network?): " +
                                     e.getLocalizedMessage());
@@ -172,7 +188,7 @@ public class RealmManager {
     /**
      * Initialize our internal state from Realm.  This should only run when launching the app
      */
-    public void initialize() {
-        this.initializeMainUser();
+    public void initialize(Context context) {
+        this.initializeMainUser(context);
     }
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Post Notes</string>
     <string name="web_client_id">1076570217754-k5b204a0fbgg3ukokaavtr0b300lm5f3.apps.googleusercontent.com</string>
+    <string name="api_url">https://post-notes.appspot.com</string>
     <string name="funny_font">LuckiestGuy.ttf</string>
     <string name="title_activity_note_list">NoteListActivity</string>
     <string name="note_entry_title">New Note</string>

@@ -53,7 +53,7 @@ public class NoteListActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 
-        //Start the list of notes to display.
+        //TODO - Fetch the list of notes to display.
 
         // 1. Load notes from Realm and assign to "notes"
 
