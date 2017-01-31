@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.List;
 
 import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
 /**
@@ -61,7 +62,7 @@ public class NetworkManager {
      */
     public void initialize(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.api_url)
+                .baseUrl(context.getString(R.string.api_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
